@@ -14,9 +14,11 @@ class LandingViewModel extends BaseModel {
 
   Info? info;
 
-  List<Info>? _info;
+  List<Info> _infoList = [];
 
-  bool _isPasswordVisible = true;
+  List<Info> get infoList => _infoList;
+
+  bool _isPasswordVisible = false;
 
   bool get isPasswordVisible => _isPasswordVisible;
 
@@ -29,27 +31,25 @@ class LandingViewModel extends BaseModel {
     isPasswordVisible = !isPasswordVisible;
   }
 
-  void deleteUserInfo(Info info) {
-    _info!.remove(info);
-    notifyListeners();
+  Future deleteUserInfo(Info info) async {
+    final bool isDeleted = await _service.deleteUserInfo(info: info);
+    if (isDeleted) {
+      _infoList.remove(info);
+      notifyListeners();
+    }
   }
 
-  Future saveUserInfo(
-      String? website, String? username, String? password) async {
-    websiteController?.text = info!.website!;
-    usernameController?.text = info!.username!;
-    passwordController?.text = info!.password!;
-
-    info?.website = website;
-    info?.username = username;
-    info?.password = password;
-
-    await _service.saveUserInfo(info: info);
+  Future saveUserInfo(String website, String username, String password) async {
+    await _service.saveUserInfo(
+        info: Info(
+      website: website,
+      username: username,
+      password: password,
+    ));
   }
 
   Future getUserInfo() async {
-    await _service.getUserInfo().then((value) {
-      info = value;
-    });
+    _infoList = await _service.getUserInfoList();
+    notifyListeners();
   }
 }

@@ -16,114 +16,111 @@ class NewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<LandingViewModel>(builder: (context, viewModel, _) {
-      return Consumer<LandingViewModel>(builder: (context, viewModel, _) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Create New Item'),
-          ),
-          body: Form(
-            key: _infoFormKey,
-            child: Padding(
-                padding: EdgeInsets.all(30),
-                child: ListView(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Text('Website :', style: TextStyle(fontSize: 20)),
-                        Expanded(child: Container()),
-                        Container(
-                          width: 220,
-                          height: 50,
-                          child: TextFormField(
-                            controller: websiteController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Text('Username :', style: TextStyle(fontSize: 20)),
-                        Expanded(child: Container()),
-                        Container(
-                          width: 220,
-                          height: 50,
-                          child: TextFormField(
-                            validator: Validation.validateEmail,
-                            controller: usernameController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Text('Password :', style: TextStyle(fontSize: 20)),
-                        Expanded(child: Container()),
-                        Container(
-                          width: 220,
-                          height: 50,
-                          child: TextFormField(
-                            controller: passwordController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
-          ),
-          floatingActionButton: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () {
-                  _navigationService!.pop();
-                },
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-                  primary: Colors.black,
-                  side: BorderSide(width: 2, color: Colors.black),
-                ),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(fontSize: 18),
-                ),
+    return BaseView<LandingViewModel>(
+        viewModel: Provider.of<LandingViewModel>(context),
+        builder: (context, viewModel, _) {
+          return Consumer<LandingViewModel>(builder: (context, viewModel, _) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Create New Item'),
               ),
-              SizedBox(width: 30),
-              TextButton(
-                onPressed: () async {
-                  await viewModel.saveUserInfo(websiteController.text,
-                      usernameController.text, passwordController.text);
-                  _navigationService!.pop();
-                },
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  primary: Colors.black,
-                  backgroundColor: Colors.green,
-                  side: BorderSide(width: 2, color: Colors.black),
-                ),
-                child: Text(
-                  'Save',
-                  style: TextStyle(fontSize: 18),
-                ),
+              body: Form(
+                key: _infoFormKey,
+                child: Padding(
+                    padding: EdgeInsets.all(30),
+                    child: ListView(
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            Text('Website :', style: TextStyle(fontSize: 20)),
+                            Expanded(
+                              child: TextFormField(
+                                controller: websiteController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Text('Username :', style: TextStyle(fontSize: 20)),
+                            Expanded(
+                              child: TextFormField(
+                                validator: Validation.validateEmail,
+                                controller: usernameController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Text('Password :', style: TextStyle(fontSize: 20)),
+                            Expanded(
+                              child: TextFormField(
+                                controller: passwordController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
               ),
-            ],
-          ),
-        );
-      });
-    });
+              floatingActionButton: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      _navigationService!.pop();
+                    },
+                    style: TextButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                      primary: Colors.black,
+                      side: BorderSide(width: 2, color: Colors.black),
+                    ),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  SizedBox(width: 30),
+                  TextButton(
+                    onPressed: () async {
+                      await viewModel.saveUserInfo(websiteController.text,
+                          usernameController.text, passwordController.text);
+                      showSnackBar(context, 'Info is saved!');
+                      await viewModel.getUserInfo();
+                      _navigationService!.pop();
+                    },
+                    style: TextButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      primary: Colors.black,
+                      backgroundColor: Colors.green,
+                      side: BorderSide(width: 2, color: Colors.black),
+                    ),
+                    child: Text(
+                      'Save',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          });
+        });
   }
 }
